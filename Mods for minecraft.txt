@@ -1,0 +1,71 @@
+code for improving the player speed
+
+code:
+
+package com.example.movementmod;
+
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+@Mod("movementmod")
+public class MovementMod {
+    public MovementMod() {
+        // Register the event handler
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    @SubscribeEvent
+    public void onPlayerMove(InputEvent.MovePlayerEvent event) {
+        // Increase the player's movement speed
+        event.setMovementInput(event.getMovementInput().scale(1.5f));
+    }
+}
+
+
+code for flying 
+
+
+code:
+
+package com.example.flymod;
+
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+@Mod("flymod")
+public class FlyMod {
+    private boolean isFlying = false;
+
+    public FlyMod() {
+        // Register the event handler
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    @SubscribeEvent
+    public void onPlayerKeyInput(InputEvent.KeyInputEvent event) {
+        // Check if the fly key is pressed
+        if (Minecraft.getInstance().gameSettings.keyBindJump.isPressed()) {
+            isFlying = !isFlying;
+            Minecraft.getInstance().player.abilities.allowFlying = isFlying;
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        if (isFlying) {
+            // Enable flying if the player is holding the jump key
+            if (Minecraft.getInstance().gameSettings.keyBindJump.isKeyDown()) {
+                event.player.abilities.isFlying = true;
+            } else {
+                event.player.abilities.isFlying = false;
+            }
+        }
+    }
+}
+
